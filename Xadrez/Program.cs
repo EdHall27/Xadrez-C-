@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tabuleiro;
 
 namespace Xadrez
 {
-    internal class Program
+    class Program
     {
         static void Main(string[] args)
         {
+            Tabuleiro p = new Tabuleiro(3, 4);
+
+            
+            Console.ReadLine();
         }
     }
 }
