@@ -132,12 +132,29 @@ namespace Xadrez
 
         public void realizaJogada(Posicao origem, Posicao destino)
         {
+            
             Peca pecaCapturada = executarMovimento(origem, destino);
             if(estaEmXeque(jogadorAtual))
             {
                 desfazMovimento(origem,destino,pecaCapturada);
                 throw new TabuleiroException("Você não pode se colocar em xeque!");
             }
+
+            Peca p = tab.peca(destino);
+
+            //#jogadaespecial promocao
+            if (p is Peao)
+            {
+                if((p.cor == Cor.Branca && destino.linha == 0) || (p.cor == Cor.Preta && destino.linha ==  7))
+                {
+                    p = tab.retirarPeca(destino);
+                    pecas.Remove(p);
+                    Peca dama = new Dama(p.cor, tab);
+                    tab.colocaPeca(dama, destino);
+                    pecas.Add(dama);
+                }
+            }
+
             if(estaEmXeque(adversaria(jogadorAtual)))
             {
                 xeque = true;
@@ -155,8 +172,6 @@ namespace Xadrez
                 turno++;
                 mudaJogador();
             }
-
-            Peca p = tab.peca(destino);
 
             //#jogadaespecial en passant
             if (p is Peao && (destino.linha == origem.linha - 2 || destino.linha == origem.linha + 2))
@@ -320,7 +335,7 @@ namespace Xadrez
             colocarNovaPeca('d', 1, new Dama(Cor.Branca, tab));
             colocarNovaPeca('e', 1, new Rei(tab, Cor.Branca, this));
             colocarNovaPeca('f', 1, new Bispo(Cor.Branca, tab));
-            colocarNovaPeca('g', 1, new Cavalo(Cor.Branca, tab));
+            //colocarNovaPeca('g', 1, new Cavalo(Cor.Branca, tab));
             colocarNovaPeca('h', 1, new Torre(Cor.Branca, tab));
             colocarNovaPeca('a', 2, new Peao(Cor.Branca, tab, this));
             colocarNovaPeca('b', 2, new Peao(Cor.Branca, tab, this));
@@ -328,8 +343,9 @@ namespace Xadrez
             colocarNovaPeca('d', 2, new Peao(Cor.Branca, tab, this));
             colocarNovaPeca('e', 2, new Peao(Cor.Branca, tab, this));
             colocarNovaPeca('f', 2, new Peao(Cor.Branca, tab, this));
-            colocarNovaPeca('g', 2, new Peao(Cor.Branca, tab, this));
+            //('g', 2, new Peao(Cor.Branca, tab, this));
             colocarNovaPeca('h', 2, new Peao(Cor.Branca, tab, this));
+            
 
             colocarNovaPeca('a', 8, new Torre(Cor.Preta, tab));
             colocarNovaPeca('b', 8, new Cavalo(Cor.Preta, tab));
@@ -346,7 +362,7 @@ namespace Xadrez
             colocarNovaPeca('e', 7, new Peao(Cor.Preta, tab, this));
             colocarNovaPeca('f', 7, new Peao(Cor.Preta, tab, this));
             colocarNovaPeca('g', 7, new Peao(Cor.Preta, tab, this));
-            colocarNovaPeca('h', 7, new Peao(Cor.Preta, tab, this));
+            colocarNovaPeca('g', 2, new Peao(Cor.Preta, tab, this));
 
             // tab.colocaPeca(new Rei(Cor.Preta, tab), new PosicaoXadrez('d', 8).toPosicao());
         }
